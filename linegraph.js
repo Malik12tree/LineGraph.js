@@ -245,6 +245,8 @@ class Graph {
 		this.update();
 	}
 	computeMinMax() {
+		if (typeof this.minmax != 'object') this.minmax = [];
+		
 		this.minmax[0] = Math.min(...this.datapoints);
 		this.minmax[1] = Math.max(...this.datapoints);
 		return this;

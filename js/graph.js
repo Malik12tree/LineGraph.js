@@ -24,7 +24,7 @@ class Graph {
 
 		this.width = data.width ?? 200;
 		this.height = data.height ?? 200;
-		
+
 		this.node = document.createElement('div');
 		this.node.classList.add('graph');
 		this.node.style.width = 'fit-content';
@@ -69,6 +69,8 @@ class Graph {
 		this.update();
 	}
 	computeMinMax() {
+		if (typeof this.minmax != 'object') this.minmax = [];
+		
 		this.minmax[0] = Math.min(...this.datapoints);
 		this.minmax[1] = Math.max(...this.datapoints);
 		return this;
