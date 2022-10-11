@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+
+</head>
+<body>
+	<script src="./js/graph.js"></script>
+	<script src="./js/svg.js"></script>
+	<script>
+const arr = [];
+const l = 52;
+for (let i = 0; i < l; i++) {
+    const r = Math.random();
+    
+    arr[i] = Math.sin(i / l * 50 + r) + r;
+}
+
+const t = new Graph({
+    datapoints: arr,
+    width: 200,
+    height: 100,
+    minmax: [-2, 3],
+    style: {
+        strokeWidth: 1.5,
+        lineSize: 1.5,
+        padding: 0.88,
+    },
+    onValue(data) {
+      console.log(data.index);
+    },
+    onCancel() {
+      console.log('Out');
+    }
+});
+
+document.body.append(t.node);
+
+	</script>
+
+
+
+	<style>
+body {
+	margin: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+
+	background-color: rgb(53, 53, 58);
+}
+.graph g {
+	outline: 1px solid white;
+}
+	</style>
+
+</body>
+</html>
