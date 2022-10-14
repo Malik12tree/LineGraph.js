@@ -1,4 +1,5 @@
 /**
+ * https://github.com/Malik12tree/LineGraph.js
  * @author Malik12tree
  */
 ;(function() {
@@ -8,17 +9,12 @@ const xmlns = "http://www.w3.org/2000/svg";
 
 class SVGShapeContainer {
 	constructor(width, height) {
-		this.width = width;
-		this.height = height;
-
 		this.node = document.createElementNS(xmlns, "svg");
 		this.groupNode = document.createElementNS(xmlns, "g");
 
-		this.node.setAttributeNS(null, "viewBox", "0 0 " + width + " " + height);
-		this.node.setAttributeNS(null, "width", width);
-		this.node.setAttributeNS(null, "height", height);
-
 		this.node.append(this.groupNode);
+
+		this.setSize(width, height);
 	}
 	setPadding(paddingInPercent) {
 		const g = this.groupNode;
@@ -31,6 +27,14 @@ class SVGShapeContainer {
 		g.removeAttributeNS(null, 'transform');
 		g.removeAttributeNS(null, 'transform-origin');
 		return this;
+	}
+	setSize(width, height) {
+		this.width = width;
+		this.height = height;
+
+		this.node.setAttributeNS(null, "viewBox", "0 0 " + width + " " + height);
+		this.node.setAttributeNS(null, "width", width);
+		this.node.setAttributeNS(null, "height", height);
 	}
 	add(...svgshapes) {
 		svgshapes.forEach(shape => {
@@ -197,9 +201,6 @@ class Graph {
 		style.lineColor = style.lineColor ?? '#ff6996';
 		style.strokeColor = style.strokeColor ?? '#ff6996';
 		style.fillColor = style.fillColor ?? '#ff699622';
-
-		this.width = data.width ?? 200;
-		this.height = data.height ?? 200;
 		
 		this.node = document.createElement('div');
 		this.node.classList.add('graph');
@@ -212,14 +213,10 @@ class Graph {
 		this.svgFill.node.classList.add('graphFill');
 		this.svgOverlay.node.classList.add('graphLine');
 
-		this.svgContainer = new SVGShapeContainer(this.width, this.height)
+		this.svgContainer = new SVGShapeContainer(0,0)
 		.add(this.svgStroke, this.svgFill, this.svgOverlay)
 
 		this.node.append(this.svgContainer.node);
-
-		this.node.style.width = this.width + 'px';
-		this.node.style.height = this.height + 'px';
-
 		
 		let _oldIndex = -1;
 		
@@ -241,8 +238,21 @@ class Graph {
 			this?.onCancel?.();
 		});
 		
+		this.setSize(data.width, data.height);
 		this.extendStyle(style);
 		this.update();
+	}
+	setSize(width, height) {
+		width = width ?? 200;
+		height = height ?? 200;
+
+		this.width = width;
+		this.height = height;
+
+		this.svgContainer.setSize(width, height);
+
+		this.node.style.width = width + 'px';
+		this.node.style.height = height + 'px';
 	}
 	computeMinMax() {
 		if (typeof this.minmax != 'object') this.minmax = [];
@@ -326,8 +336,10 @@ class Graph {
 			}
 
 		}
-		this.svgFill.lineTo(this.width, this.height, false);
-		this.svgFill.lineTo(0, this.height, false);
+		this.svgFill
+		.moveTo(0,0)
+		.lineTo(this.width, this.height, false)
+		.lineTo(0, this.height, false);
 
 		// 0 sized circle that keeps the the height of the container constant
 		this.svgFill.circle(0,0, 0, 0, false);
