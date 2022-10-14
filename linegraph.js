@@ -336,11 +336,9 @@ class Graph {
 			}
 
 		}
-		this.svgFill
-		.moveTo(0,0)
-		.lineTo(this.width, this.height, false)
-		.lineTo(0, this.height, false);
-
+		if (1 in this.datapoints) {
+			this.svgFill.lineTo(this.width, this.height, false).lineTo(0, this.height, false);
+		}
 		// 0 sized circle that keeps the the height of the container constant
 		this.svgFill.circle(0,0, 0, 0, false);
 	}
