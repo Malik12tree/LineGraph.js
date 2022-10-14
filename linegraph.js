@@ -253,6 +253,7 @@ class Graph {
 
 		this.node.style.width = width + 'px';
 		this.node.style.height = height + 'px';
+		this.updateSVGOrigin();
 	}
 	computeMinMax() {
 		if (typeof this.minmax != 'object') this.minmax = [];
@@ -261,6 +262,11 @@ class Graph {
 		this.minmax[1] = Math.max(...this.datapoints);
 		return this;
 	}
+	updateSVGOrigin() {
+		const offsetX = this.width * this.style.padding * 0.5;
+		const offsetY = this.height * this.style.padding * 0.5;
+		this.svgContainer.groupNode.setAttributeNS(null, 'transform-origin', `${offsetX}px ${offsetY}px`);
+	}
 	/** @param {GraphStyleData} data */
 	extendStyle(data) {
 		['strokeWidth','padding','lineSize','lineColor','strokeColor','fillColor']
@@ -268,6 +274,7 @@ class Graph {
 			this.style[key] = data[key] ?? this.style[key];
 		});
 		this.svgContainer.setPadding(this.style.padding);
+		this.updateSVGOrigin();
 
 		this.svgStroke.stroke(this.style.strokeColor).strokeWidth(this.style.strokeWidth);
 		this.svgFill.fill(this.style.fillColor);
